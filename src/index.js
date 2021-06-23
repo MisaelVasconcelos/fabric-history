@@ -2,8 +2,8 @@
 /**
  * Override the initialize function for the _historyInit();
  */
-fabric.Canvas.prototype.initialize = (function(originalFn) {
-  return function(...args) {
+fabric.Canvas.prototype.initialize = (function (originalFn) {
+  return function (...args) {
     originalFn.call(this, ...args);
     this._historyInit();
     return this;
@@ -13,8 +13,8 @@ fabric.Canvas.prototype.initialize = (function(originalFn) {
 /**
  * Override the dispose function for the _historyDispose();
  */
-fabric.Canvas.prototype.dispose = (function(originalFn) {
-  return function(...args) {
+fabric.Canvas.prototype.dispose = (function (originalFn) {
+  return function (...args) {
     originalFn.call(this, ...args);
     this._historyDispose();
     return this;
@@ -31,7 +31,7 @@ fabric.Canvas.prototype._historyNext = function () {
 /**
  * Returns an object with fabricjs event mappings
  */
-fabric.Canvas.prototype._historyEvents = function() {
+fabric.Canvas.prototype._historyEvents = function () {
   return {
     'object:added': this._historySaveAction,
     'object:removed': this._historySaveAction,
@@ -46,9 +46,9 @@ fabric.Canvas.prototype._historyEvents = function() {
 fabric.Canvas.prototype._historyInit = function () {
   this.historyUndo = [];
   this.historyRedo = [];
-  this.extraProps = ['selectable'];
+  this.extraProps = ['selectable', 'lockMovementX', 'lockMovementY', 'editable', 'lockScalingX', 'lockScalingY'];
   this.historyNextState = this._historyNext();
-  
+
   this.on(this._historyEvents());
 }
 
@@ -114,10 +114,10 @@ fabric.Canvas.prototype.redo = function (callback) {
   }
 }
 
-fabric.Canvas.prototype._loadHistory = function(history, event, callback) {
+fabric.Canvas.prototype._loadHistory = function (history, event, callback) {
   var that = this;
 
-  this.loadFromJSON(history, function() {
+  this.loadFromJSON(history, function () {
     that.renderAll();
     that.fire(event);
     that.historyProcessing = false;
@@ -130,7 +130,7 @@ fabric.Canvas.prototype._loadHistory = function(history, event, callback) {
 /**
  * Clear undo and redo history stacks
  */
-fabric.Canvas.prototype.clearHistory = function() {
+fabric.Canvas.prototype.clearHistory = function () {
   this.historyUndo = [];
   this.historyRedo = [];
   this.fire('history:clear');
@@ -139,14 +139,14 @@ fabric.Canvas.prototype.clearHistory = function() {
 /**
  * Off the history
  */
-fabric.Canvas.prototype.offHistory = function() {
+fabric.Canvas.prototype.offHistory = function () {
   this.historyProcessing = true;
 }
 
 /**
  * On the history
  */
-fabric.Canvas.prototype.onHistory = function() {
+fabric.Canvas.prototype.onHistory = function () {
   this.historyProcessing = false;
 
   this._historySaveAction();
